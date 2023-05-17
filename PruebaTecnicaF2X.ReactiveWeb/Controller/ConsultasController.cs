@@ -26,7 +26,7 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaResponse))]
         [ProducesResponseType(400)]
         [HttpGet()]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> ConsultaInformacion()
         {
             try
             {
