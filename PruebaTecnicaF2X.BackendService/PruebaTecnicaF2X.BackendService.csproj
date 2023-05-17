@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Data" Version="6.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -15,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PruebaTecnicaF2X.ObjectsUtils\PruebaTecnicaF2X.ObjectsUtils.csproj" />
     <ProjectReference Include="..\PruebaTecnicaF2X.ReactiveWeb\PruebaTecnicaF2X.ReactiveWeb.csproj" />
+    <ProjectReference Include="..\PruebaTecnicaF2X.SqlServer\PruebaTecnicaF2X.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

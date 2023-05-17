@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PruebaTecnicaF2X.Model.Consultas;
 using PruebaTecnicaF2X.UseCase.Consultas;
+using PruebaTecnicaF2X.UseCase.ProcesarInformacion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,11 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
     public class ConsultasController:ControllerBase
     {
         IConsultaUseCase consultaUseCase;
-
-        public ConsultasController(IConsultaUseCase consultaUseCase)
+        IProcesarUseCase procesarUseCase;
+        public ConsultasController(IConsultaUseCase consultaUseCase, IProcesarUseCase procesarUseCase)
         {
             this.consultaUseCase = consultaUseCase;
+            this.procesarUseCase= procesarUseCase;  
         }
 
 
@@ -30,6 +32,8 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
         {
             try
             {
+                procesarUseCase.Procesar();
+
                 ConsultaResponse result = await consultaUseCase.ConsultarInformacion();
                 return StatusCode(StatusCodes.Status200OK, result);
 
