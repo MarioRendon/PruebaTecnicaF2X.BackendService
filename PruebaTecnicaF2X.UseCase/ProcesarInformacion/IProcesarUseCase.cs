@@ -8,6 +8,6 @@ namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
 {
     public interface IProcesarUseCase
     {
-        Task<string> Procesar();
+        Task Procesar();
     }
 }

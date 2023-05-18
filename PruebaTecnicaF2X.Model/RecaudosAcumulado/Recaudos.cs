@@ -12,12 +12,12 @@ namespace PruebaTecnicaF2X.Model.RecaudosAcumulado
 
         public string Sentido { get; set; }
 
-        public Timer hora { get; set; }
+        public int Hora { get; set; }
 
         public string Categoria { get; set; }
 
-        public double ValorTabulado { get; set; }
+        public decimal? ValorTabulado { get; set; }
 
-        public double Cantidad { get; set; }
+        public int? Cantidad { get; set; }
     }
 }

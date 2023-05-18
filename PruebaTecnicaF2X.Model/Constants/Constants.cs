@@ -17,6 +17,6 @@ namespace PruebaTecnicaF2X.Model.Constantes
 
 
 
-        public const string NOMBRETABLARECAUDO="RECAUDO";
+        public const string NOMBRETABLARECAUDO= "[MarioRendon].[Recaudos]";
     }
 }

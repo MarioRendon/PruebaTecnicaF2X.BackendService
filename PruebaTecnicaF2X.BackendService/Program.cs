@@ -14,8 +14,10 @@ ConfiguratorAppSettings configuratorAppSettings =builder.Configuration.GetSectio
 
 builder.Services.AddEndpointsApiExplorer()
     .AddSwaggerGen()
+    .RegisterAutoMapper()
     .RegistrarServicio()
-    .RegisterAutoMapper();
+    
+    .RegisterSQL(configuratorAppSettings.ConexionSql);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,5 +9,7 @@ namespace PruebaTecnicaF2X.ObjectsUtils
     public class ConfiguratorAppSettings
     {
         public string UrlApis { get; set; }
+
+        public string ConexionSql { get; set; }
     }
 }

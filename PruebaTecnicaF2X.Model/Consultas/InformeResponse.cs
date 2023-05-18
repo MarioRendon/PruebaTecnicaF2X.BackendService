@@ -1,16 +1,15 @@
-﻿using PruebaTecnicaF2X.Model.RecaudosAcumulado;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PruebaTecnicaF2X.Model.Consultas
 {
-    public class ConsultaResponse
+    public class InformeResponse
     {
-        public List<Recaudos> Datos { get; set; }
+
+        public string reporte { get; set; }
     }
-
-
 }

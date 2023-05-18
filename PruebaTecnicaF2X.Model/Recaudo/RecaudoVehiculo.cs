@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PruebaTecnicaF2X.Model.Recaudos
+namespace PruebaTecnicaF2X.Model.Recaudo
 {
     public class RecaudoVehiculo
     {
@@ -12,7 +12,7 @@ namespace PruebaTecnicaF2X.Model.Recaudos
 
         public string Sentido { get; set; }
 
-        public Timer hora { get; set; }
+        public int Hora { get; set; }
 
         public string Categoria { get; set; }
 

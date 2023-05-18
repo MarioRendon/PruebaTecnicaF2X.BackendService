@@ -17,11 +17,10 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
     public class ConsultasController:ControllerBase
     {
         IConsultaUseCase consultaUseCase;
-        IProcesarUseCase procesarUseCase;
-        public ConsultasController(IConsultaUseCase consultaUseCase, IProcesarUseCase procesarUseCase)
+        
+        public ConsultasController(IConsultaUseCase consultaUseCase)
         {
             this.consultaUseCase = consultaUseCase;
-            this.procesarUseCase= procesarUseCase;  
         }
 
 
@@ -32,7 +31,6 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
         {
             try
             {
-                procesarUseCase.Procesar();
 
                 ConsultaResponse result = await consultaUseCase.ConsultarInformacion();
                 return StatusCode(StatusCodes.Status200OK, result);
@@ -41,6 +39,23 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status400BadRequest,  ex.Message);
+            }
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaResponse))]
+        [ProducesResponseType(400)]
+        [HttpGet("Reporte")]
+        public async Task<ActionResult> Reporte()
+        {
+            try
+            {
+                InformeResponse result = await consultaUseCase.GenerarInforme();
+                return StatusCode(StatusCodes.Status200OK, result);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
             }
         }
     }
