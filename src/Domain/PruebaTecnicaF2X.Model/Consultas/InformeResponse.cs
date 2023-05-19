@@ -10,6 +10,6 @@ namespace PruebaTecnicaF2X.Model.Consultas
     public class InformeResponse
     {
 
-        public string reporte { get; set; }
+        public string? reporte { get; set; }
     }
 }

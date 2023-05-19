@@ -22,6 +22,10 @@ namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
             this.recaudosRepository = recaudosRepository;
         }
 
+        /// <summary>
+        /// metodo para procesar la informacion
+        /// </summary>
+        /// <returns></returns>
         public async Task Procesar()
         {
             await recaudosRepository.LimpiarData();
@@ -31,15 +35,27 @@ namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
             DateTime i = new DateTime(2021, 8, 1);
             while (i < new DateTime(2021, 10, 6))
             {
-                Consultar(token, i.ToString("yyyy-MM-dd"));
+                await Consultar(token, i.ToString("yyyy-MM-dd"));
                 i = i.AddDays(1);
             }
         }
+
+        /// <summary>
+        /// metodo para loguearse al servicio para obtener la informacion
+        /// </summary>
+        /// <returns></returns>
         private async Task<string> Login()
         {
             return await conexionApiAdapter.Conectar(Constants.USUARIO, Constants.CLAVE);
         }
 
+
+        /// <summary>
+        /// metodo para hacer la consulta de los datos y la union de los registros, donde cantidad y valor quedando en un solo registros
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="fecha"></param>
+        /// <returns></returns>
         private async Task<bool> Consultar(string token, string fecha)
         {
 
@@ -124,18 +140,18 @@ namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
                 throw;
             }
         }
+
+        /// <summary>
+        /// metodo para guardar la informacion consultada los servicios
+        /// </summary>
+        /// <param name="recaudo"></param>
+        /// <returns></returns>
         private async Task<bool> Guardar(List<Recaudos> recaudo)
         {
             return await recaudosRepository.IngresarDatosRecaudo(recaudo);
-            //result = await recaudosRepository.IngresarDatosConteo(conteo);
-            //return result;
+            
         }
-        //private async Task<bool> Guardar(List<ConteoVehiculos> conteo, List<RecaudoVehiculo> recaudo)
-        //{
-        //    bool result = await recaudosRepository.IngresarDatosRecaudo(recaudo);
-        //    result = await recaudosRepository.IngresarDatosConteo(conteo);
-        //    return result;
-        //}
+        
 
 
     }

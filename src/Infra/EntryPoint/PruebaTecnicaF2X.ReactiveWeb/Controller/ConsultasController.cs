@@ -28,7 +28,7 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaResponse))]
         [ProducesResponseType(400)]
         [HttpGet("ConsultaRecaudos")]
-        public async Task<ActionResult> ConsultaInformacion(string? categoria,string? sentido,int? hora,string? estacion)
+        public async Task<ActionResult> ConsultaInformacion(string? categoria,string? sentido,int? hora,string? estacion,string? registro)
         {
             try
             {
@@ -37,7 +37,8 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
                     Categoria = categoria,
                     Estacion = estacion,
                     Hora = hora,
-                    Sentido = sentido
+                    Sentido = sentido,
+                    Registro = registro
                 };
                 ConsultaResponse result = await consultaUseCase.ConsultarInformacion(consultaRequest);
                 return StatusCode(StatusCodes.Status200OK,JsonConvert.SerializeObject(result));

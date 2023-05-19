@@ -39,7 +39,7 @@ namespace PruebaTecnicaF2X.SqlServer
                 sqlCondicion = $"{" WHERE "}{sqlCondicion.Substring(0, sqlCondicion.Length - 4)}";
             }
 
-            string sqlQuery = $"SELECT TOP 1000 * FROM {Constants.NOMBRETABLARECAUDO}{sqlCondicion}";
+            string sqlQuery = $"SELECT {(consultaRequest.Registro!=""?$"{" TOP "}{consultaRequest.Registro}":"")} * FROM {Constants.NOMBRETABLARECAUDO}{sqlCondicion}";
             using var conexion = context.CrearConexion();
             var result = await conexion.QueryAsync<RecaudosEntity>(sqlQuery);
             List<Recaudos> recaudos = mapper.Map<List<Recaudos>>(result);

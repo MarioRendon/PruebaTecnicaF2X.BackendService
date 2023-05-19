@@ -16,5 +16,12 @@ namespace PruebaTecnicaF2X.Model.Consultas
 
         public string? Categoria { get; set; }
 
+        public string? Registro { get; set; }
+
+        public ConsultaRequest() {
+            Registro = "";
+            
+               
+        }
     }
 }

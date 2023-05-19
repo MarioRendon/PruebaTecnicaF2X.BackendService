@@ -25,7 +25,11 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
             this.recaudosRepository = recaudosRepository;
         }
         
-
+        /// <summary>
+        /// Consulta la informacion de los datos
+        /// </summary>
+        /// <param name="consultaRequest"></param>
+        /// <returns></returns>
         public async Task<ConsultaResponse> ConsultarInformacion(ConsultaRequest consultaRequest)
         {
             List<Recaudos> recaudos= await recaudosRepository.ConsultaRecaudos(consultaRequest);
@@ -35,10 +39,13 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
         
         }
 
-
+        /// <summary>
+        /// Genera el reporte
+        /// </summary>
+        /// <returns></returns>
         public async Task<InformeResponse> GenerarInforme()
         {
-            List<Recaudos> recaudos = await recaudosRepository.ConsultaRecaudos( new ConsultaRequest());
+            List<Recaudos> recaudos = await recaudosRepository.ConsultaRecaudos( new ConsultaRequest() );
 
             if (recaudos.Count > 0)
             {
@@ -58,13 +65,17 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
                                                   }).ToList();
 
 
-                return new InformeResponse() { reporte = await CreacionPLantilla(lEstaciones, recaudosTotales) };
+                return new InformeResponse() { reporte = CreacionPLantilla(lEstaciones, recaudosTotales) };
             }
             return new InformeResponse() { reporte = Constants.RESPUESTANOGENERACIONREPORTE };
         }
 
-
-        private async Task<string> CrearEncabezadoEstacion(List<string> lEstaciones)
+        /// <summary>
+        /// Para organizar lo encabezados del reporte
+        /// </summary>
+        /// <param name="lEstaciones"></param>
+        /// <returns></returns>
+        private string CrearEncabezadoEstacion(List<string> lEstaciones)
         {
             string pRegistroEstacion = "<th colspan='2'>{0}</th>";
 
@@ -77,7 +88,12 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
             return registroEstacion;
         }
 
-        private async Task<string> CrearRegistroFecha(List<Recaudos> recaudosTotales)
+        /// <summary>
+        /// Crear cada uno de los registros del reporte
+        /// </summary>
+        /// <param name="recaudosTotales"></param>
+        /// <returns></returns>
+        private string CrearRegistroFecha(List<Recaudos> recaudosTotales)
         {
             string pFechas = "<tr> <th>Fecha {0}</th> {1}</tr>";
             string pRegistroCantidadRecaudo = " <th>{0}</th> <th>{1}</th>";
@@ -98,12 +114,16 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
                 fecha = item.Hora;
             }
             #region Organizar totales x estacion
-            acumuladoRegistroXFecha += await CrearTotales(recaudosTotales);
+            acumuladoRegistroXFecha += CrearTotales(recaudosTotales);
             #endregion
             return acumuladoRegistroXFecha;
         }
-
-        private async Task<string> CrearTotales(List<Recaudos> recaudos)
+        /// <summary>
+        /// Crea los totales
+        /// </summary>
+        /// <param name="recaudos"></param>
+        /// <returns></returns>
+        private string CrearTotales(List<Recaudos> recaudos)
         {
 
             List<Recaudos> recaudosTotales = (from tRecaudos in recaudos
@@ -126,10 +146,16 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
             return result;
         }
 
-        private async Task<string> CreacionPLantilla(List<string> lEstaciones, List<Recaudos> recaudosTotales) {
+        /// <summary>
+        /// Consolida toda la plantilla del reporte
+        /// </summary>
+        /// <param name="lEstaciones"></param>
+        /// <param name="recaudosTotales"></param>
+        /// <returns></returns>
+        private string CreacionPLantilla(List<string> lEstaciones, List<Recaudos> recaudosTotales) {
 
-            string estaciones = await CrearEncabezadoEstacion(lEstaciones);
-            string registros = await CrearRegistroFecha(recaudosTotales);
+            string estaciones = CrearEncabezadoEstacion(lEstaciones);
+            string registros =  CrearRegistroFecha(recaudosTotales);
             double? totalCantidad = recaudosTotales.Sum(x => x.Cantidad);
             double? totalRecaudo = recaudosTotales.Sum(x => x.ValorTabulado);
             string reporte = string.Format("<table border='1'><tr><th></th>{0}</tr>{1}<table><table border='1'><tr><th rowspan='2'>Totales</th><th>{2}</th></tr><tr ><th>{3}</th></tr></table>", estaciones, registros, totalCantidad?.ToString("N0"), totalRecaudo?.ToString("N0"));
