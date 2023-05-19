@@ -24,19 +24,19 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
         }
         
 
-        public async Task<ConsultaResponse> ConsultarInformacion()
+        public async Task<ConsultaResponse> ConsultarInformacion(ConsultaRequest consultaRequest)
         {
-            List<Recaudos> recaudos= await recaudosRepository.ConsultaRecaudos();
-            
+            List<Recaudos> recaudos= await recaudosRepository.ConsultaRecaudos(consultaRequest);
 
-            return new ConsultaResponse() { Datos = recaudos };
+            ConsultaResponse consultaResponse = new ConsultaResponse() { Datos = recaudos.ToList() };
+           return consultaResponse;
         
         }
 
 
         public async Task<InformeResponse> GenerarInforme()
         {
-            List<Recaudos> recaudos = await recaudosRepository.ConsultaRecaudos();
+            List<Recaudos> recaudos = await recaudosRepository.ConsultaRecaudos( new ConsultaRequest());
 
             List<string> lEstaciones = (from estaciones in recaudos
                                    group estaciones by estaciones.Estacion into estaciones
@@ -81,12 +81,12 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
             int fecha = recaudosTotales.FirstOrDefault().Hora;
             foreach (Recaudos item in recaudosTotales)
             {
-                if (fecha == item.Hora)
-                    registroXFecha += string.Format(pRegistroCantidadRecaudo, item.Cantidad, item.ValorTabulado);
+                if (fecha.Equals(item.Hora))
+                    registroXFecha += string.Format(pRegistroCantidadRecaudo, item.Cantidad?.ToString("N0"), item.ValorTabulado?.ToString("N0"));
                 else
                 {
                     acumuladoRegistroXFecha += string.Format(pFechas, fecha, registroXFecha);
-                    registroXFecha = string.Format(pRegistroCantidadRecaudo, item.Cantidad, item.ValorTabulado);
+                    registroXFecha = string.Format(pRegistroCantidadRecaudo, item.Cantidad?.ToString("N0"), item.ValorTabulado?.ToString("N0"));
                 }
 
                 fecha = item.Hora;
@@ -114,7 +114,7 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
             string registroTotal = "";
             foreach (Recaudos item in recaudosTotales)
             {
-                registroTotal += string.Format(pRegistroCantidadRecaudo, item.Cantidad, item.ValorTabulado);
+                registroTotal += string.Format(pRegistroCantidadRecaudo, item.Cantidad?.ToString("N0"), item.ValorTabulado?.ToString("N0"));
             }
             string result = string.Format(pFechas, registroTotal).ToString();
             return result;
@@ -124,9 +124,9 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
 
             string estaciones = await CrearEncabezadoEstacion(lEstaciones);
             string registros = await CrearRegistroFecha(recaudosTotales);
-            int? totalCantidad = recaudosTotales.Sum(x => x.Cantidad);
-            decimal? totalRecaudo = recaudosTotales.Sum(x => x.ValorTabulado);
-            string reporte = string.Format("<html><body><table border='1'><tr><th></th>{0}</tr>{1}<table><table border='1'><tr><th rowspan='2'>Totales</th><th>{2}</th></tr><tr ><th>{3}</th></tr></table></body></html>", estaciones, registros, totalCantidad,totalRecaudo);
+            double? totalCantidad = recaudosTotales.Sum(x => x.Cantidad);
+            double? totalRecaudo = recaudosTotales.Sum(x => x.ValorTabulado);
+            string reporte = string.Format("<table border='1'><tr><th></th>{0}</tr>{1}<table><table border='1'><tr><th rowspan='2'>Totales</th><th>{2}</th></tr><tr ><th>{3}</th></tr></table>", estaciones, registros, totalCantidad?.ToString("N0"), totalRecaudo?.ToString("N0"));
 
 
             return reporte;

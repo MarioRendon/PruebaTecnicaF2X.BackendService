@@ -12,7 +12,7 @@ namespace PruebaTecnicaF2X.SqlServer.Recaudo
 
         public string Sentido { get; set; }
 
-        public int hora { get; set; }
+        public string hora { get; set; }
 
         public string Categoria { get; set; }
 

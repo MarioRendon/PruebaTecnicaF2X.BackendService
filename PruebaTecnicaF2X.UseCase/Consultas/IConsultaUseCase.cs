@@ -9,7 +9,7 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
 {
     public interface IConsultaUseCase
     {
-        Task<ConsultaResponse> ConsultarInformacion();
+        Task<ConsultaResponse> ConsultarInformacion(ConsultaRequest consultaRequest);
         Task<InformeResponse> GenerarInforme();
     }
 }

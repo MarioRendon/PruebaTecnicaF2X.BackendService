@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PruebaTecnicaF2X.Model.Consultas;
 using PruebaTecnicaF2X.UseCase.Consultas;
 using PruebaTecnicaF2X.UseCase.ProcesarInformacion;
@@ -26,14 +27,20 @@ namespace PruebaTecnicaF2X.ReactiveWeb.Controller
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaResponse))]
         [ProducesResponseType(400)]
-        [HttpGet()]
-        public async Task<ActionResult> ConsultaInformacion()
+        [HttpGet("ConsultaRecaudos")]
+        public async Task<ActionResult> ConsultaInformacion(string? categoria,string? sentido,int? hora,string? estacion)
         {
             try
             {
-
-                ConsultaResponse result = await consultaUseCase.ConsultarInformacion();
-                return StatusCode(StatusCodes.Status200OK, result);
+                ConsultaRequest consultaRequest = new()
+                {
+                    Categoria = categoria,
+                    Estacion = estacion,
+                    Hora = hora,
+                    Sentido = sentido
+                };
+                ConsultaResponse result = await consultaUseCase.ConsultarInformacion(consultaRequest);
+                return StatusCode(StatusCodes.Status200OK,JsonConvert.SerializeObject(result));
 
             }
             catch (Exception ex)

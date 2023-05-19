@@ -16,8 +16,8 @@ namespace PruebaTecnicaF2X.Model.RecaudosAcumulado
 
         public string Categoria { get; set; }
 
-        public decimal? ValorTabulado { get; set; }
+        public double? ValorTabulado { get; set; }
 
-        public int? Cantidad { get; set; }
+        public double? Cantidad { get; set; }
     }
 }

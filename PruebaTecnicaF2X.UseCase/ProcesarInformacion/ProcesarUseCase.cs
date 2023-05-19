@@ -3,6 +3,7 @@ using PruebaTecnicaF2X.Http.Api;
 using PruebaTecnicaF2X.Model.Constantes;
 using PruebaTecnicaF2X.Model.Conteo;
 using PruebaTecnicaF2X.Model.Recaudo;
+using PruebaTecnicaF2X.Model.RecaudosAcumulado;
 using PruebaTecnicaF2X.Model.RecaudosAcumulado.Gateway;
 
 namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
@@ -45,38 +46,72 @@ namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
             try
             {
                 var result = await conexionApiAdapter.Consumir(Constants.APICONTEO, token, fecha);
-                List<ConteoVehiculos> conteoVehiculos = JsonConvert.DeserializeObject<List<ConteoVehiculos>>(result.Content);
+                List<ConteoVehiculos> conteoVehiculos =(from rVehiculos in JsonConvert.DeserializeObject<List<ConteoVehiculos>>(result.Content)
+                                                         group rVehiculos by new
+                                                         {
+                                                             rVehiculos.Sentido,
+                                                             rVehiculos.Estacion,
+                                                             rVehiculos.Hora,
+                                                             rVehiculos.Categoria
+                                                         } into _rVehiculos
+                                                         select new ConteoVehiculos()
+                                                         {
+                                                             Categoria = _rVehiculos.First().Categoria,
+                                                             Estacion = _rVehiculos.First().Estacion,
+                                                             Hora = _rVehiculos.First().Hora,
+                                                             Sentido = _rVehiculos.First().Sentido,
+                                                             Cantidad = _rVehiculos.Sum(x => x.Cantidad)
+                                                         }
+                                                        ).ToList();
+
                 result = await conexionApiAdapter.Consumir(Constants.APIRECAUDO, token, fecha);
-                List<RecaudoVehiculo> recaudoVehiculo = JsonConvert.DeserializeObject<List<RecaudoVehiculo>>(result.Content);
+                List<RecaudoVehiculo> recaudoVehiculo = (from rVehiculos in JsonConvert.DeserializeObject<List<RecaudoVehiculo>>(result.Content)
+                                                         group rVehiculos by new
+                                                         {
+                                                             rVehiculos.Sentido,
+                                                             rVehiculos.Estacion,
+                                                             rVehiculos.Hora,
+                                                             rVehiculos.Categoria
+                                                         } into _rVehiculos
+                                                         select new RecaudoVehiculo()
+                                                         {
+                                                             Categoria = _rVehiculos.First().Categoria,
+                                                             Estacion = _rVehiculos.First().Estacion,
+                                                             Hora = _rVehiculos.First().Hora,
+                                                             Sentido = _rVehiculos.First().Sentido,
+                                                             ValorTabulado = _rVehiculos.Sum(x => x.ValorTabulado)
+                                                         }
+                                                        ).ToList();
 
 
-                return await Guardar(conteoVehiculos, recaudoVehiculo);
 
-                //List<Recaudos> lRecaudos = (from _conteoVehiculos in conteoVehiculos 
-                //                            join _recaudoVehiculo in recaudoVehiculo on
-                //                             new
-                //                             {
-                //                                 _conteoVehiculos.Estacion,
-                //                                 _conteoVehiculos.Hora,
-                //                                 _conteoVehiculos.Categoria,
-                //                                 _conteoVehiculos.Sentido
-                //                             } equals new
-                //                             {
-                //                                 _recaudoVehiculo.Estacion,
-                //                                 _recaudoVehiculo.Hora,
-                //                                 _recaudoVehiculo.Categoria,
-                //                                 _recaudoVehiculo.Sentido
-                //                             }
-                //                            select new Recaudos()
-                //                            {
-                //                                Estacion = _conteoVehiculos.Estacion,
-                //                                Hora =_conteoVehiculos.Hora,
-                //                                Categoria = _conteoVehiculos.Categoria,
-                //                                Sentido = _conteoVehiculos.Sentido,
-                //                                Cantidad= _conteoVehiculos.Cantidad,
-                //                                ValorTabulado= _recaudoVehiculo.ValorTabulado
-                //                            }).ToList();
-                //return "";
+
+                List<Recaudos> lRecaudos = (from _conteoVehiculos in conteoVehiculos
+                                            join _recaudoVehiculo in recaudoVehiculo on
+                                             new
+                                             {
+                                                 _conteoVehiculos.Estacion,
+                                                 _conteoVehiculos.Hora,
+                                                 _conteoVehiculos.Categoria,
+                                                 _conteoVehiculos.Sentido
+                                             } equals new
+                                             {
+                                                 _recaudoVehiculo.Estacion,
+                                                 _recaudoVehiculo.Hora,
+                                                 _recaudoVehiculo.Categoria,
+                                                 _recaudoVehiculo.Sentido
+                                             }
+                                            select new Recaudos()
+                                            {
+                                                Estacion = _conteoVehiculos.Estacion,
+                                                Hora = _conteoVehiculos.Hora,
+                                                Categoria = _conteoVehiculos.Categoria,
+                                                Sentido = _conteoVehiculos.Sentido,
+                                                Cantidad = _conteoVehiculos.Cantidad,
+                                                ValorTabulado = _recaudoVehiculo.ValorTabulado
+                                            }).ToList();
+                return await Guardar(lRecaudos);
+                //return await Guardar(conteoVehiculos, recaudoVehiculo);
             }
             catch (Exception ex)
             {
@@ -84,13 +119,18 @@ namespace PruebaTecnicaF2X.UseCase.ProcesarInformacion
                 throw;
             }
         }
-
-        private async Task<bool> Guardar(List<ConteoVehiculos> conteo, List<RecaudoVehiculo> recaudo)
+        private async Task<bool> Guardar(List<Recaudos> recaudo)
         {
-            bool result = await recaudosRepository.IngresarDatosRecaudo(recaudo);
-            result = await recaudosRepository.IngresarDatosConteo(conteo);
-            return result;
+            return await recaudosRepository.IngresarDatosRecaudo(recaudo);
+            //result = await recaudosRepository.IngresarDatosConteo(conteo);
+            //return result;
         }
+        //private async Task<bool> Guardar(List<ConteoVehiculos> conteo, List<RecaudoVehiculo> recaudo)
+        //{
+        //    bool result = await recaudosRepository.IngresarDatosRecaudo(recaudo);
+        //    result = await recaudosRepository.IngresarDatosConteo(conteo);
+        //    return result;
+        //}
 
 
     }
