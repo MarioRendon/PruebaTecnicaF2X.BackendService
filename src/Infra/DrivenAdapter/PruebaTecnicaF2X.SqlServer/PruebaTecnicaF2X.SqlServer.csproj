@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PruebaTecnicaF2X.Model\PruebaTecnicaF2X.Model.csproj" />
+    <ProjectReference Include="..\..\..\Domain\PruebaTecnicaF2X.Model\PruebaTecnicaF2X.Model.csproj" />
   </ItemGroup>
 
 </Project>

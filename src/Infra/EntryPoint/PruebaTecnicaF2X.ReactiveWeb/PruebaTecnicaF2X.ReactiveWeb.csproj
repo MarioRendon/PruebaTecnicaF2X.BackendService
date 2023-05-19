@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PruebaTecnicaF2X.UseCase\PruebaTecnicaF2X.UseCase.csproj" />
+    <ProjectReference Include="..\..\..\Domain\PruebaTecnicaF2X.UseCase\PruebaTecnicaF2X.UseCase.csproj" />
   </ItemGroup>
 
 </Project>

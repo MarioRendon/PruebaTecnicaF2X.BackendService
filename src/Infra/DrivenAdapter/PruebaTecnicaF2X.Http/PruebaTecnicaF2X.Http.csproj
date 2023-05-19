@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PruebaTecnicaF2X.Model\PruebaTecnicaF2X.Model.csproj" />
-    <ProjectReference Include="..\PruebaTecnicaF2X.ObjectsUtils\PruebaTecnicaF2X.ObjectsUtils.csproj" />
+    <ProjectReference Include="..\..\..\Domain\PruebaTecnicaF2X.Model\PruebaTecnicaF2X.Model.csproj" />
+    <ProjectReference Include="..\..\Helpers\PruebaTecnicaF2X.ObjectsUtils\PruebaTecnicaF2X.ObjectsUtils.csproj" />
   </ItemGroup>
 
 </Project>

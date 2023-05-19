@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PruebaTecnicaF2X.Http\PruebaTecnicaF2X.Http.csproj" />
+    <ProjectReference Include="..\..\Infra\DrivenAdapter\PruebaTecnicaF2X.Http\PruebaTecnicaF2X.Http.csproj" />
     <ProjectReference Include="..\PruebaTecnicaF2X.Model\PruebaTecnicaF2X.Model.csproj" />
   </ItemGroup>
 

@@ -18,5 +18,7 @@ namespace PruebaTecnicaF2X.Model.Constantes
 
 
         public const string NOMBRETABLARECAUDO= "[MarioRendon].[Recaudos]";
+
+        public const string RESPUESTANOGENERACIONREPORTE = "El reporte no se pudo generar ya que no se encontro informacion";
     }
 }

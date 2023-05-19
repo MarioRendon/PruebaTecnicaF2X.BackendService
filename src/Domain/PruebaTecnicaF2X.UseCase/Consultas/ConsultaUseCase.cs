@@ -1,4 +1,5 @@
 ﻿using PruebaTecnicaF2X.Http.Api;
+using PruebaTecnicaF2X.Model.Constantes;
 using PruebaTecnicaF2X.Model.Consultas;
 using PruebaTecnicaF2X.Model.RecaudosAcumulado;
 using PruebaTecnicaF2X.Model.RecaudosAcumulado.Gateway;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PruebaTecnicaF2X.UseCase.Consultas
@@ -38,23 +40,27 @@ namespace PruebaTecnicaF2X.UseCase.Consultas
         {
             List<Recaudos> recaudos = await recaudosRepository.ConsultaRecaudos( new ConsultaRequest());
 
-            List<string> lEstaciones = (from estaciones in recaudos
-                                   group estaciones by estaciones.Estacion into estaciones
-                                   select estaciones.Key).ToList();
+            if (recaudos.Count > 0)
+            {
+                List<string> lEstaciones = (from estaciones in recaudos
+                                            group estaciones by estaciones.Estacion into estaciones
+                                            select estaciones.Key).ToList();
 
-            List<Recaudos> recaudosTotales = (from tRecaudos in recaudos
-                                              group tRecaudos by new { tRecaudos.Estacion, tRecaudos.Hora } into _tRecaudos
-                                              orderby _tRecaudos.Key.Hora ascending
-                                              select new Recaudos()
-                                              {
-                                                  Hora=_tRecaudos.Key.Hora,
-                                                  Estacion=_tRecaudos.Key.Estacion.ToString(),
-                                                  Cantidad= _tRecaudos.Sum(x=>x.Cantidad),
-                                                  ValorTabulado=_tRecaudos.Sum(x=>x.ValorTabulado),
-                                              }).ToList();
-            
+                List<Recaudos> recaudosTotales = (from tRecaudos in recaudos
+                                                  group tRecaudos by new { tRecaudos.Estacion, tRecaudos.Hora } into _tRecaudos
+                                                  orderby _tRecaudos.Key.Hora ascending
+                                                  select new Recaudos()
+                                                  {
+                                                      Hora = _tRecaudos.Key.Hora,
+                                                      Estacion = _tRecaudos.Key.Estacion.ToString(),
+                                                      Cantidad = _tRecaudos.Sum(x => x.Cantidad),
+                                                      ValorTabulado = _tRecaudos.Sum(x => x.ValorTabulado),
+                                                  }).ToList();
 
-            return new InformeResponse() { reporte = await CreacionPLantilla(lEstaciones, recaudosTotales)};
+
+                return new InformeResponse() { reporte = await CreacionPLantilla(lEstaciones, recaudosTotales) };
+            }
+            return new InformeResponse() { reporte = Constants.RESPUESTANOGENERACIONREPORTE };
         }
 
 
